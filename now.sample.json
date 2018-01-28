@@ -1,0 +1,7 @@
+{
+  "env": {
+    "CONNECTION_STRING": "STRING",
+    "SALT": "NUMBER",
+    "PORT": "NUMBER"
+  }
+}

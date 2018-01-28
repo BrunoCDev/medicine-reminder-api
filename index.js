@@ -1,4 +1,4 @@
-require("dotenv").config();
+require("now-env");
 // REQUIRE DEPENDENCIES
 const { json } = require("body-parser");
 const express = require("express");
@@ -6,21 +6,19 @@ const massive = require("massive");
 
 const uc = require("./controllers/userController");
 
-const { CONNECTION_STRING, SESSION_SECRET } = process.env;
+const { CONNECTION_STRING, PORT } = process.env;
 
 // MAKE PORT AND APP
 const app = express();
-const PORT = process.env.PORT || 3005;
+const port = PORT || 3005;
 
 // USING BODY PARSER AND CORS
 app.use(json());
 
 // SETTING UP DATABASE CONNECTION
 massive(CONNECTION_STRING)
-  .then(db => {
-    app.set("db", db);
-  })
-  .catch(console.log);
+  .then(db => app.set("db", db))
+  .catch(err => console.log("Error connecting to database: ", err));
 
 app.post("/api/auth", uc.getUser);
 app.post("/api/create", uc.createUser);
@@ -40,6 +38,6 @@ app.post("/api/user/get", uc.getUserById);
 app.post("/api/alarms/delete", uc.deleteAllAlarms);
 
 // APP LISTEN
-app.listen(PORT, () => {
-  console.log(`Listening on port: ${PORT}`);
+app.listen(port, () => {
+  console.log(`Listening on port: ${port}`);
 });
